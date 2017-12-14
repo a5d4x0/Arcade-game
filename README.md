@@ -5,4 +5,4 @@
 ## Start
 在浏览器中运行index.html即可开始游戏。
 ## FAQ
-该游戏由JavaScript开发，核心代码在app.js中。
+该游戏使用JavaScript开发，核心代码在app.js中。
