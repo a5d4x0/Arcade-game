@@ -65,8 +65,9 @@ Player.prototype.handleInput = function(key) {
 // player是玩家对象
 var allEnemies = [new Enemy(), new Enemy(101, 83), new Enemy(101*2, 83*2), new Enemy(101*3, 83*3)];
 var player = new Player();
-//碰撞检测，检测青蛙是否和敌人撞到
+//碰撞检测，检测玩家是否和敌人撞到
 function collision(obj) {
+//玩家到达河边，即过关。弹出“Congratulations”弹窗。
     if(obj.y <= 0) {
         setTimeout(function() {
             alert("Congratulations!");
@@ -75,6 +76,7 @@ function collision(obj) {
     } else {
         allEnemies.forEach(function(enemy) {
             var xdiv = Math.floor(enemy.x/101) + 1;
+            //如果玩家和敌人碰到，则回到初始位置，重新开始游戏。
             if((obj.x <= ((xdiv+1)*101))
             &&(obj.x >= (xdiv*101))
             &&(obj.y == enemy.y)) {
