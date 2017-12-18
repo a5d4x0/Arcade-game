@@ -1,16 +1,28 @@
 'use strict';
 const HEIGHT = 83;
 const WIDTH = 101;
-// 玩家要躲避的敌人 
-var Enemy = function(x = 0, y = 0, speed = 100) {
-    this.sprite = 'images/enemy-bug.png';
+var Character = function(x = 0, y = 0, sprite) {
     this.ox = x;
     this.oy = y;
     this.x = x;
     this.y = y;
-    this.speed = speed;
+    this.sprite = sprite;
+}
+//在屏幕上画出游戏对象
+Character.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+}
+Character.prototype.update = function() {  
 };
-
+// 玩家要躲避的敌人 
+var Enemy = function(x = 0, y = 0, speed = 100) {
+    var enemy = Object.create(Enemy.prototype);
+    Character.call(enemy, x, y, 'images/enemy-bug.png');
+    enemy.speed = speed;
+    return enemy;
+};
+Enemy.prototype = Object.create(Character.prototype);
+Enemy.prototype.constructor = Enemy;
 // 更新敌人的位置
 // 参数: dt ，表示时间间隙
 Enemy.prototype.update = function(dt) {
@@ -21,28 +33,17 @@ Enemy.prototype.update = function(dt) {
         this.x = this.ox;
 };
 
-// 此为游戏必须的函数，用来在屏幕上画出敌人，
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
 
 // 玩家类
 var Player = function(x = WIDTH, y = HEIGHT*5) {
-    this.sprite = 'images/char-boy.png';
-    this.ox = x;
-    this.oy = y;
-    this.x = x;
-    this.y = y;
+    var player = Object.create(Player.prototype);
+    Character.call(player, x, y, 'images/char-boy.png');
+    return player;
 };
+Player.prototype = Object.create(Character.prototype);
+Player.prototype.constructor = Player;
 
-Player.prototype.update = function() {
-    
-};
-
-Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);  
-};
-//处理玩家的键盘事件，青蛙的移动范围不能超过游戏背景的范围
+//处理玩家的键盘事件，敌人的移动范围不能超过游戏背景的范围
 Player.prototype.handleInput = function(key) {
     switch(key) {
         case 'left':
