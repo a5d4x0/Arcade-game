@@ -1,10 +1,14 @@
+'use strict';
+const HEIGHT = 83;
+const WIDTH = 101;
 // 玩家要躲避的敌人 
-var Enemy = function(x = 0, y = 0) {
+var Enemy = function(x = 0, y = 0, speed = 100) {
     this.sprite = 'images/enemy-bug.png';
     this.ox = x;
     this.oy = y;
     this.x = x;
     this.y = y;
+    this.speed = speed;
 };
 
 // 更新敌人的位置
@@ -12,8 +16,8 @@ var Enemy = function(x = 0, y = 0) {
 Enemy.prototype.update = function(dt) {
     // 每一次的移动都乘以 dt 参数，以此来保证游戏在所有的电脑上
     // 都是以同样的速度运行的
-    this.x += dt*100;
-    if(this.x >= 83*5)
+    this.x += dt*this.speed;
+    if(this.x >= HEIGHT*5)
         this.x = this.ox;
 };
 
@@ -23,7 +27,7 @@ Enemy.prototype.render = function() {
 };
 
 // 玩家类
-var Player = function(x = 101, y = 83*5) {
+var Player = function(x = WIDTH, y = HEIGHT*5) {
     this.sprite = 'images/char-boy.png';
     this.ox = x;
     this.oy = y;
@@ -43,19 +47,19 @@ Player.prototype.handleInput = function(key) {
     switch(key) {
         case 'left':
             if(this.x > 0)
-                this.x -= 101;
+                this.x -= WIDTH;
             break;
         case 'up':
             if(this.y > 0)
-                this.y -= 83;
+                this.y -= HEIGHT;
             break;
         case 'right':
-            if(this.x < 101*4)    
-                this.x += 101;
+            if(this.x < WIDTH*4)    
+                this.x += WIDTH;
             break;
         case 'down':
-            if(this.y < 83*5)
-                this.y += 83;
+            if(this.y < HEIGHT*5)
+                this.y += HEIGHT;
             break;
     }
     collision(this);   
@@ -63,7 +67,7 @@ Player.prototype.handleInput = function(key) {
 
 // allEnemies数组包含了所有敌人对象
 // player是玩家对象
-var allEnemies = [new Enemy(), new Enemy(101, 83), new Enemy(101*2, 83*2), new Enemy(101*3, 83*3)];
+var allEnemies = [new Enemy(), new Enemy(0, HEIGHT, 200), new Enemy(0, HEIGHT*2, 300), new Enemy(0, HEIGHT*3, 400)];
 var player = new Player();
 //碰撞检测，检测玩家是否和敌人撞到
 function collision(obj) {
@@ -75,10 +79,10 @@ function collision(obj) {
         },100); 
     } else {
         allEnemies.forEach(function(enemy) {
-            var xdiv = Math.floor(enemy.x/101) + 1;
+            var xdiv = Math.floor(enemy.x/WIDTH) + 1;
             //如果玩家和敌人碰到，则回到初始位置，重新开始游戏。
-            if((obj.x <= ((xdiv+1)*101))
-            &&(obj.x >= (xdiv*101))
+            if((obj.x <= ((xdiv+1)*WIDTH))
+            &&(obj.x >= (xdiv*WIDTH))
             &&(obj.y == enemy.y)) {
                 setTimeout(function() {
                     location.reload();
